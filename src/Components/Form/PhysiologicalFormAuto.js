@@ -3,7 +3,7 @@ import React from 'react';
 /* Import Components */
 import Input from './Input';  
 import Select from './Select';
-import Button from './Button'
+import MyButton from './Button'
 
 export default class PhysiologicalFormAuto extends React.Component {  
   constructor(props) {
@@ -20,7 +20,6 @@ export default class PhysiologicalFormAuto extends React.Component {
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.handleClearForm = this.handleClearForm.bind(this);
   }
 
   handleInputChange(event) {
@@ -37,15 +36,6 @@ export default class PhysiologicalFormAuto extends React.Component {
     // Form submission logic
   }
 
-  handleClearForm(e) {
-    e.preventDefault();
-    this.setState({
-      height: '',
-      weight: '',
-      age: '',
-      gender: '',
-    });
-  }
   render() {
     return (
       <form className="container" onSubmit={this.handleFormSubmit}>
@@ -75,8 +65,10 @@ export default class PhysiologicalFormAuto extends React.Component {
           placeholder = {'Select Gender'}
           handleChange = {this.handleInputChange}
         />
-        <Button />
-        <Button />
+        <MyButton 
+          title={'Next'}
+          action = {this.handleFormSubmit}
+        />
       </form>
     );
   }

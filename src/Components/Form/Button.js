@@ -1,13 +1,14 @@
 import React from 'react'
+import Button from '@material-ui/core/Button'
 
-export default class Button extends React.Component {
+export default class MyButton extends React.Component {
   render() {
     return (
-      <button 
-        style= {this.props.style} 
-        onClick= {this.props.action}>  
-        {this.props.title} 
-      </button>
+      <Button
+        variant = {"contained"}
+        onClick = {this.props.action}>
+        {this.props.title}
+      </Button>
     )
   }
 }
