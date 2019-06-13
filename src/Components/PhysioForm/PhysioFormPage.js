@@ -5,7 +5,9 @@ export default class FormPage extends React.Component {
   render() {
     return (
       <div>
-        <PhysiologicalFormAuto />
+        <PhysiologicalFormAuto 
+          advancePage = {this.props.advancePage}
+        />
       </div>
     )
   }

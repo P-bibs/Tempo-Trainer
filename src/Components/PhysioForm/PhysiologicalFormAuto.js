@@ -2,8 +2,9 @@ import React from 'react';
 
 /* Import Components */
 import Input from './Input';  
-import Select from './Select';
+import MySelect from './Select';
 import MyButton from './Button'
+import RadioButtonsGroup from './RadioButtonsGroup'
 
 export default class PhysiologicalFormAuto extends React.Component {  
   constructor(props) {
@@ -15,7 +16,7 @@ export default class PhysiologicalFormAuto extends React.Component {
       age: '',
       gender: '',
       
-      genderOptions: ['Male', 'Female', 'Other'],
+      genderOptions: ['Male', 'Female'],
       numberOfGuests: 0,
     }
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -26,6 +27,7 @@ export default class PhysiologicalFormAuto extends React.Component {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
+    console.log(event)
 
     this.setState({
       [name]: value
@@ -33,7 +35,8 @@ export default class PhysiologicalFormAuto extends React.Component {
   }
 
   handleFormSubmit() {
-    // Form submission logic
+    this.props.advancePage(this.state);
+    console.log(this.state)
   }
 
   render() {
@@ -57,7 +60,7 @@ export default class PhysiologicalFormAuto extends React.Component {
           handleChange = {this.handleInputChange}
           endAdornment = {'in'}
         />
-        <Select
+        <RadioButtonsGroup
           title = {'Gender'}
           name = {'gender'}
           options = {this.state.genderOptions}
