@@ -2,7 +2,6 @@ import React from 'react';
 
 /* Import Components */
 import Input from './Input';  
-import MySelect from './Select';
 import MyButton from './Button'
 import RadioButtonsGroup from './RadioButtonsGroup'
 
