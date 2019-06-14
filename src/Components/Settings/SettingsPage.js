@@ -17,7 +17,6 @@ export default class SettingsPage extends React.Component {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
-    console.log(event)
 
     this.setState({
       [name]: value
@@ -26,7 +25,6 @@ export default class SettingsPage extends React.Component {
 
   handleFormSubmit() {
     this.props.advancePage(this.state);
-    console.log(this.state)
   }
 
   render() {
