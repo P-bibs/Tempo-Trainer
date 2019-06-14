@@ -1,4 +1,5 @@
 import React from 'react';
+import MyButton from '../PhysioForm/Button'
 
 export default class RedirectButton extends React.Component {
 
@@ -25,8 +26,9 @@ export default class RedirectButton extends React.Component {
   }
 
   render() {
-    return <button onClick={this.redirectToAuth}>
-      Click Here to Authorize
-    </button>
+    return <MyButton 
+      title={"Click Here to Authorize"}
+      action={this.redirectToAuth}
+    />
   }
 }
