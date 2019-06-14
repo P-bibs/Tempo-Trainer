@@ -10,7 +10,7 @@ export default class RadioButtonsGroup extends React.Component {
   constructor(props){
     super(props);
     this.options = this.props.options.map(option => {
-      return <FormControlLabel value={option} control = {<Radio />} label = {option} />
+      return <FormControlLabel key = {option} value={option} control = {<Radio />} label = {option} />
     });
   }
   render() {
