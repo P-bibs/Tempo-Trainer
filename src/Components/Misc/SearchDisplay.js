@@ -11,18 +11,6 @@ export default class SearchDisplay extends React.Component {
     this.searchArtist();
   }
 
-  parseAccessToken(){
-    var url = window.location.href;
-    if (url.includes("access_token=")) {
-      var startIndex = url.indexOf("access_token=") + "access_token=".length
-      var token = url.substring(startIndex, url.indexOf("&", startIndex))
-      return token;
-    }
-    else {
-      return -1;
-    }
-  }
-
   searchArtist(){
     let spotify = new SpotifyWebApi();
     spotify.setAccessToken(this.token);
