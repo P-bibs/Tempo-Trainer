@@ -63,13 +63,17 @@ export default class SourceSelectPage extends React.Component {
   }
 
   handleFormSubmit() {
-    this.props.advancePage({playlistURI: this.playlistIds[this.state.source]});
+    this.props.changePage({playlistURI: this.playlistIds[this.state.source]}, 1);
   }
   
   render() {
     return (
       <div>
         {this.state.displayObj}
+        <MyButton 
+          title={'Back'}
+          action = {() => {this.props.changePage({}, -1)}}
+        />
         <MyButton 
           title={'Next'}
           action = {this.handleFormSubmit}

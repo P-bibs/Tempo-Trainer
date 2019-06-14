@@ -24,13 +24,17 @@ export default class SettingsPage extends React.Component {
   }
 
   handleFormSubmit() {
-    this.props.advancePage(this.state);
+    this.props.changePage(this.state);
   }
 
   render() {
     return (
       <div>
         <PaceInput />
+        <MyButton 
+          title={'Back'}
+          action = {() => this.props.changePage({}, -1)}
+        />
         <MyButton 
           title={'Done'}
           action = {this.handleFormSubmit}

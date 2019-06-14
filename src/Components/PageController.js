@@ -12,8 +12,9 @@ export default class PageController extends React.Component {
       currentPage: 0
     }
     
-    this.submitPhysioForm = this.submitPhysioForm.bind(this)
-    this.submitSourceSelect = this.submitSourceSelect.bind(this)
+    this.changePage_PhysioForm = this.changePage_PhysioForm.bind(this)
+    this.changePage_SourceSelect = this.changePage_SourceSelect.bind(this)
+    this.changePage_Settings = this.changePage_Settings.bind(this)
 
     this.pages = [
       <RedirectPage/>
@@ -21,31 +22,58 @@ export default class PageController extends React.Component {
 
     let token = this.parseAccessToken()
     if (token===-1) {
-      this.state = {currentPage: 0}
+      this.state = {...this.state, currentPage: 0}
     }
     else {
       this.spotify = new SpotifyWebApi();
       this.spotify.setAccessToken(token);
-      this.state = {currentPage: 1}
-      this.pages[1] = <FormPage advancePage = {this.submitPhysioForm} spotify = {this.spotify}/>;
+      this.state = {...this.state, currentPage: 1}
+      this.pages[1] = <FormPage 
+        changePage={this.changePage_PhysioForm}
+        spotify = {this.spotify}
+      />;
     }
 
     
   }
 
-  submitPhysioForm(state){
-    this.pages[2] = <SourceSelectPage advancePage={this.submitSourceSelect} spotify = {this.spotify}/>
-    this.setState({
-      currentPage: 2
-    })
+  changePage_PhysioForm(data, direction){
+    if (direction === 1){
+      this.pages[2] = <SourceSelectPage
+        changePage={this.changePage_SourceSelect}
+        spotify = {this.spotify}
+      />
+      this.setState({
+        currentPage: 2,
+      })
+    }
 
   }
 
-  submitSourceSelect(state){
-    this.pages[3] = <SettingsPage spotify = {this.spotify}/>
-    this.setState({
-      currentPage: 3
-    })
+  changePage_SourceSelect(data, direction){
+    if (direction === 1){
+      this.pages[3] = <SettingsPage
+        sourceURIs = {data.playlistURI}
+        changePage={this.changePage_Settings}
+        spotify = {this.spotify}
+      />
+      this.setState({
+        currentPage: 3,
+      })
+    }
+    else if (direction === -1) {
+      this.setState({
+        currentPage: 1
+      })
+    }
+  }
+
+  changePage_Settings(data, direction){
+    if (direction === -1) {
+      this.setState({
+        currentPage: 2
+      })
+    }
   }
 
   parseAccessToken(){
