@@ -19,10 +19,13 @@ export default class SourceSelectPage extends React.Component {
   }
 
   componentDidMount(){
-    let names = []
     this.spotify.getUserPlaylists()
       .then(function(data) {
-
+        //Construct Table to translate playlist names into Spotify URIs
+        this.playlistIds = {}
+        data.items.forEach(item => {this.playlistIds[item.name] = item.id})
+        
+        let names = []
         data.items.forEach(element => {
           names.push(element.name)
         });
@@ -60,7 +63,7 @@ export default class SourceSelectPage extends React.Component {
   }
 
   handleFormSubmit() {
-    this.props.advancePage(this.state);
+    this.props.advancePage({playlistURI: this.playlistIds[this.state.source]});
   }
   
   render() {
