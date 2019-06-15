@@ -8,6 +8,8 @@ export default class Input extends React.Component {
       <div>
         <TextField
           variant='outlined'
+          className={this.props.className}
+          style={this.props.style}
           name={this.props.name}
           type={this.props.type}
           value={this.props.value}

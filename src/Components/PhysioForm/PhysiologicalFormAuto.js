@@ -1,5 +1,5 @@
 import React from 'react';  
-
+import './FormStyles.css'
 /* Import Components */
 import Input from '../Reusable/Input';  
 import MyButton from '../Reusable/Button'
@@ -39,15 +39,9 @@ export default class PhysiologicalFormAuto extends React.Component {
     return (
       <form className="container" onSubmit={this.handleFormSubmit}>
         <Input 
-          type = {'number'}
-          title = {'Weight'}
-          name = {'weight'}
-          value = {this.state.weight}
-          label = {'Enter Weight'}
-          handleChange = {this.handleInputChange}
-          endAdornment = {'lbs'}
-        />
-        <Input 
+          style = {{
+            margin: "10px"
+          }}
           type = {'number'}
           title = {'Height'}
           name = {'height'}
