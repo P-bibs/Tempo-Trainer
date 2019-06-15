@@ -1,6 +1,6 @@
 import React from 'react';  
-import MyButton from '../PhysioForm/Button'
-import RadioButtonsGroup from '../PhysioForm/RadioButtonsGroup'
+import MyButton from '../Reusable/Button'
+import RadioButtonsGroup from '../Reusable/RadioButtonsGroup'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 

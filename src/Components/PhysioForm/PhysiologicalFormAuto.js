@@ -1,9 +1,9 @@
 import React from 'react';  
 
 /* Import Components */
-import Input from './Input';  
-import MyButton from './Button'
-import RadioButtonsGroup from './RadioButtonsGroup'
+import Input from '../Reusable/Input';  
+import MyButton from '../Reusable/Button'
+import RadioButtonsGroup from '../Reusable/RadioButtonsGroup'
 
 export default class PhysiologicalFormAuto extends React.Component {  
   constructor(props) {

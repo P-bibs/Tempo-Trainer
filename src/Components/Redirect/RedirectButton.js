@@ -1,5 +1,5 @@
 import React from 'react';
-import MyButton from '../PhysioForm/Button'
+import MyButton from '../Reusable/Button'
 
 export default class RedirectButton extends React.Component {
 

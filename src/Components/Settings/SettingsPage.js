@@ -1,6 +1,6 @@
 import React from 'react'
 import PaceInput from './PaceInput.js';
-import MyButton from '../PhysioForm/Button.js'
+import MyButton from '../Reusable/Button.js'
 
 export default class SettingsPage extends React.Component {
   constructor(props){
