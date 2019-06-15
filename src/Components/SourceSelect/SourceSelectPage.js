@@ -1,7 +1,7 @@
 import React from 'react';  
 import MyButton from '../PhysioForm/Button'
 import RadioButtonsGroup from '../PhysioForm/RadioButtonsGroup'
-import { thisExpression } from '@babel/types';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 export default class SourceSelectPage extends React.Component {
@@ -10,7 +10,7 @@ export default class SourceSelectPage extends React.Component {
     this.state = {
       source: "",
       sourceOptions: [],
-      displayObj: <div>Loading</div>
+      displayObj: <div><CircularProgress /></div>
     }
     this.spotify = props.spotify
 
@@ -41,6 +41,9 @@ export default class SourceSelectPage extends React.Component {
           />
         })
       }.bind(this))
+      .catch(function(err) {
+        window.location.href = window.location.href.split('#')[0]
+      });
   }
 
   handleInputChange(event) {
