@@ -66,7 +66,10 @@ export default class SourceSelectPage extends React.Component {
   }
 
   handleFormSubmit() {
-    this.props.changePage({playlistURI: this.playlistIds[this.state.source]}, 1);
+    this.props.changePage(
+      {sourceURIs: [this.playlistIds[this.state.source]]},
+      1
+    );
   }
   
   render() {

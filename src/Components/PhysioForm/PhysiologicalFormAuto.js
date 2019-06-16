@@ -11,11 +11,9 @@ export default class PhysiologicalFormAuto extends React.Component {
 
     this.state = {
       height: '',
-      weight: '',
       gender: '',
       
       genderOptions: ['Male', 'Female'],
-      numberOfGuests: 0,
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -32,7 +30,7 @@ export default class PhysiologicalFormAuto extends React.Component {
   }
 
   handleFormSubmit() {
-    this.props.changePage(this.state, 1);
+    this.props.changePage({height: this.state.height, gender: this.state.gender}, 1);
   }
 
   render() {

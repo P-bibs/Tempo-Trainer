@@ -10,6 +10,7 @@ export default class PageController extends React.Component {
     super(props);
     this.state = {
       currentPage: 0
+      //'globalState' defined later
     }
     
     this.changePage_PhysioForm = this.changePage_PhysioForm.bind(this)
@@ -40,25 +41,32 @@ export default class PageController extends React.Component {
   changePage_PhysioForm(data, direction){
     if (direction === 1){
       this.pages[2] = <SourceSelectPage
-        changePage={this.changePage_SourceSelect}
-        spotify = {this.spotify}
-      />
-      this.setState({
-        currentPage: 2,
+          globalState = {{...this.state.globalState, ...data}}
+          changePage={this.changePage_SourceSelect}
+          spotify = {this.spotify}
+        />
+
+      this.setState(previousState => {
+        return {
+          currentPage: 2,
+          globalState: {...previousState.globalState, ...data}
+        }
       })
     }
-
   }
 
   changePage_SourceSelect(data, direction){
     if (direction === 1){
       this.pages[3] = <SettingsPage
-        sourceURIs = {data.playlistURI}
+        globalState = {{...this.state.globalState, ...data}}
         changePage={this.changePage_Settings}
         spotify = {this.spotify}
       />
-      this.setState({
-        currentPage: 3,
+      this.setState(previousState => {
+        return {
+          currentPage: 3,
+          globalState: {...previousState.globalState, ...data}
+        }
       })
     }
     else if (direction === -1) {
