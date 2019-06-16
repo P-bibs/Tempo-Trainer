@@ -1,5 +1,5 @@
 import React from 'react';
-import MyButton from '../Reusable/Button'
+import Button from '@material-ui/core/Button'
 
 export default class RedirectButton extends React.Component {
 
@@ -26,9 +26,10 @@ export default class RedirectButton extends React.Component {
   }
 
   render() {
-    return <MyButton 
-      title={"Click Here to Authorize"}
-      action={this.redirectToAuth}
-    />
+    return <Button 
+      variant={'contained'}
+      onClick={this.redirectToAuth}>
+      Click Here to Authenticate
+    </Button>
   }
 }

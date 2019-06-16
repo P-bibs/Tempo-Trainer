@@ -1,5 +1,5 @@
 import React from 'react';  
-import MyButton from '../Reusable/Button'
+import Button from '@material-ui/core/Button'
 import RadioButtonsGroup from '../Reusable/RadioButtonsGroup'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -76,14 +76,16 @@ export default class SourceSelectPage extends React.Component {
     return (
       <div>
         {this.state.displayObj}
-        <MyButton 
-          title={'Back'}
-          action = {() => {this.props.changePage({}, -1)}}
-        />
-        <MyButton 
-          title={'Next'}
-          action = {this.handleFormSubmit}
-        />
+        <Button 
+          variant = {'contained'}
+          onClick = {() => {this.props.changePage({}, -1)}}>
+          Back
+        </Button>
+        <Button 
+          variant = {'contained'}
+          onClick = {this.handleFormSubmit}>
+          Next
+        </Button>
       </div>
     )
   }

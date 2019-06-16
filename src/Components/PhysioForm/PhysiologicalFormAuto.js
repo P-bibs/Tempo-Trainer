@@ -1,10 +1,9 @@
 import React from 'react';  
 import './FormStyles.css'
 /* Import Components */
-//import Input from '../Reusable/Input';  
 import TextField from '@material-ui/core/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import MyButton from '../Reusable/Button'
+import Button from '@material-ui/core/Button'
 import RadioButtonsGroup from '../Reusable/RadioButtonsGroup'
 import Switch from '@material-ui/core/Switch'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -133,10 +132,11 @@ export default class PhysiologicalFormAuto extends React.Component {
           placeholder = {'Select Gender'}
           handleChange = {this.handleInputChange}
         />
-        <MyButton 
-          title={'Next'}
-          action = {this.handleFormSubmit}
-        />
+        <Button 
+          variant = {'contained'}
+          onClick = {this.handleFormSubmit}>
+          Next
+        </Button>
       </form>
     );
   }

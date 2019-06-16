@@ -1,6 +1,6 @@
 import React from 'react'
 import PaceInput from './PaceInput.js';
-import MyButton from '../Reusable/Button.js'
+import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default class SettingsPage extends React.Component {
@@ -108,14 +108,16 @@ export default class SettingsPage extends React.Component {
           <div>
             {this.state.compatibleTracks}/{this.state.possibleTracks.length}
           </div>
-          <MyButton 
-            title={'Back'}
-            action = {() => this.props.changePage({}, -1)}
-          />
-          <MyButton 
-            title={'Done'}
-            action = {this.handleFormSubmit}
-          />
+          <Button 
+            variant = {'contained'}
+            onClick = {() => this.props.changePage({}, -1)}>
+            Back
+          </Button>
+          <Button 
+            variant = {'contained'}
+            onClick = {this.handleFormSubmit}>
+            Done
+          </Button>
         </div>
       )
     }
