@@ -24,7 +24,7 @@ export default class SettingsPage extends React.Component {
   }
 
   calculateTargetTempo(strideLength, targetPace) {
-    return (1/strideLength) * 63360 / targetPace
+    return (1/strideLength) * 5280 / targetPace
   }
 
   componentDidMount(){
