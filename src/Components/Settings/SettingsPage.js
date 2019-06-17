@@ -1,8 +1,6 @@
 import React from 'react'
+import {TextField, CircularProgress, Button} from '@material-ui/core';
 import PaceInput from './PaceInput.js';
-import Button from '@material-ui/core/Button'
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
 
 export default class SettingsPage extends React.Component {
   constructor(props){

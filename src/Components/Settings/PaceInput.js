@@ -1,7 +1,7 @@
 import React from 'react'
+import {InputBase, Paper} from '@material-ui/core'
 import './PaceInput.css'
-import InputBase from '@material-ui/core/InputBase'
-import Paper from '@material-ui/core/Paper'
+
 
 export default class PaceInput extends React.Component {
   render() {

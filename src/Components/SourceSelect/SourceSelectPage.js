@@ -1,7 +1,6 @@
 import React from 'react';  
-import Button from '@material-ui/core/Button'
+import {Button, CircularProgress} from '@material-ui/core'
 import RadioButtonsGroup from '../Reusable/RadioButtonsGroup'
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 export default class SourceSelectPage extends React.Component {

@@ -1,8 +1,5 @@
 import React from 'react'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
+import {FormControl, InputLabel, MenuItem, Select} from '@material-ui/core'
 
 export default class MySelect extends React.Component {
   constructor(props){

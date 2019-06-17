@@ -1,9 +1,9 @@
 import React from 'react'
+import SpotifyWebApi from 'spotify-web-api-js'
 import RedirectPage from './Redirect/RedirectPage'
 import FormPage from './PhysioForm/PhysioFormPage'
 import SourceSelectPage from './SourceSelect/SourceSelectPage.js'
 import SettingsPage from './Settings/SettingsPage.js'
-import SpotifyWebApi from 'spotify-web-api-js'
 
 export default class PageController extends React.Component {
   constructor(props){

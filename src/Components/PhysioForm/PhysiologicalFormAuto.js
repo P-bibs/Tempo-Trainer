@@ -1,12 +1,6 @@
 import React from 'react';  
+import {TextField, InputAdornment, Button, RadioButtonsGroup, Switch, FormControlLabel} from '@material-ui/core'
 import './FormStyles.css'
-/* Import Components */
-import TextField from '@material-ui/core/TextField'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import Button from '@material-ui/core/Button'
-import RadioButtonsGroup from '../Reusable/RadioButtonsGroup'
-import Switch from '@material-ui/core/Switch'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 export default class PhysiologicalFormAuto extends React.Component {  
   constructor(props) {
