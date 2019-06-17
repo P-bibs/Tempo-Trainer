@@ -14,6 +14,7 @@ export default class RedirectButton extends React.Component {
         client_id: '78b3189f1c0b49caa2fbb1482f477223',
         response_type: 'token',
         redirect_uri: 'http://localhost:3000',
+        scope: "playlist-modify-private playlist-modify-public"
     };
     
     var esc = encodeURIComponent;

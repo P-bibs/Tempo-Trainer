@@ -2,6 +2,7 @@ import React from 'react'
 import PaceInput from './PaceInput.js';
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress';
+import TextField from '@material-ui/core/TextField';
 
 export default class SettingsPage extends React.Component {
   constructor(props){
@@ -9,6 +10,7 @@ export default class SettingsPage extends React.Component {
     this.state = {
       paceMinutes: "",
       paceSeconds: "",
+      playlistTitle: "",
       compatibleTracks: 0,
       tolerance: 10,
 
@@ -71,7 +73,7 @@ export default class SettingsPage extends React.Component {
       console.log("Target Tempo: " + _targetTempo)
       let _compatibleTracks = this.state.possibleTracks.filter(item => {
         return (item[1] > Number(_targetTempo) - this.state.tolerance && item[1] < Number(_targetTempo) + this.state.tolerance)
-      }).length
+      })
 
       this.setState({
         compatibleTracks: _compatibleTracks
@@ -82,7 +84,19 @@ export default class SettingsPage extends React.Component {
   }
 
   handleFormSubmit() {
-    this.props.changePage(this.state);
+    //this.props.changePage(this.state);
+    this.spotify.getMe()
+      .then(function(data){
+        let _userId = data.id
+        return this.spotify.createPlaylist(_userId, {name: this.state.playlistTitle, public: false})
+      }.bind(this))
+      .then(function(data){
+        let _tracks = this.state.compatibleTracks.map(item => {return "spotify:track:" + item[0]})
+        return this.spotify.addTracksToPlaylist(data.id, _tracks)
+      }.bind(this))
+      .then(function(data){
+        console.log(data)
+      })
   }
 
   render() {
@@ -93,6 +107,17 @@ export default class SettingsPage extends React.Component {
     else{
       return (
         <div>
+          <TextField 
+            variant = {"filled"}
+            style = {{
+              margin: "10px",
+            }}
+            type = {'text'}
+            name = {'playlistTitle'}
+            value = {this.state.playlistTitle}
+            label = {'Playlist Title'}
+            onChange = {this.handleInputChange}
+          />
           <div>
             <PaceInput
               name0 = {"paceMinutes"}
@@ -106,7 +131,7 @@ export default class SettingsPage extends React.Component {
             Number of songs that match tempo:
           </div>
           <div>
-            {this.state.compatibleTracks}/{this.state.possibleTracks.length}
+            {this.state.compatibleTracks.length}/{this.state.possibleTracks.length}
           </div>
           <Button 
             variant = {'contained'}
