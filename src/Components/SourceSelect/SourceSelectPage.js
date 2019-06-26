@@ -1,4 +1,4 @@
-import React from 'react';  
+import React from 'react';
 import {Button, CircularProgress} from '@material-ui/core'
 import RadioButtonsGroup from '../Reusable/RadioButtonsGroup'
 
@@ -9,7 +9,8 @@ export default class SourceSelectPage extends React.Component {
     this.state = {
       source: "",
       sourceOptions: [],
-      displayObj: <div><CircularProgress /></div>
+      errors: {source: false},
+      loading: true
     }
     this.spotify = props.spotify
 
@@ -23,7 +24,7 @@ export default class SourceSelectPage extends React.Component {
         //Construct Table to translate playlist names into Spotify URIs
         this.playlistIds = {}
         data.items.forEach(item => {this.playlistIds[item.name] = item.id})
-        
+
         let names = []
         data.items.forEach(element => {
           names.push(element.name)
@@ -31,13 +32,7 @@ export default class SourceSelectPage extends React.Component {
 
         this.setState({
           sourceOptions: names,
-          displayObj: <RadioButtonsGroup
-            title = {'Source Select'}
-            name = {'source'}
-            options = {["Saved Songs", ...names]}
-            value = {this.state.source}
-            handleChange = {this.handleInputChange}
-          />
+          loading: false
         })
       }.bind(this))
       .catch(function(err) {
@@ -53,34 +48,69 @@ export default class SourceSelectPage extends React.Component {
     this.setState(previousState => {
       return {
         [name]: value,
-        displayObj: <RadioButtonsGroup
-          title = {'Source Select'}
-          name = {'source'}
-          options = {previousState.sourceOptions}
-          value = {value}
-          handleChange = {this.handleInputChange}
-        />
       }
+    }, () => this.validate(false));
+
+  }
+
+  validate(pushNewErrors){
+    let _errors = this.state.errors
+
+    if (this.state.source === "") {
+      if (pushNewErrors) {
+        _errors.source = true
+      }
+    }
+    else {
+      _errors.source = false
+    }
+
+    this.setState({
+      errors: _errors
     });
+
+    let _hasError = false
+    Object.keys(_errors).forEach(function(key) {
+        if (_errors[key] === true) {
+          _hasError = true
+        }
+    });
+
+    return !_hasError
   }
 
   handleFormSubmit() {
-    this.props.changePage(
-      {sourceURIs: [this.playlistIds[this.state.source]]},
-      1
-    );
+    if (this.validate(true)) {
+      this.props.changePage(
+        {sourceURIs: [this.playlistIds[this.state.source]]},
+        1
+      );
+    }
   }
-  
+
   render() {
     return (
       <div>
-        {this.state.displayObj}
-        <Button 
+        {this.state.loading ?
+          <div><CircularProgress/></div>
+          :
+          <RadioButtonsGroup
+            title = {'Source Select'}
+            name = {'source'}
+            options = {["Saved Songs", ...this.state.sourceOptions]}
+            value = {this.state.source}
+            handleChange = {this.handleInputChange}
+            error = {this.state.errors.source}
+            errorText = {"Please select a source playlist"}
+          />
+        }
+
+        <Button
           variant = {'contained'}
           onClick = {() => {this.props.changePage({}, -1)}}>
           Back
         </Button>
-        <Button 
+        <Button
           variant = {'contained'}
           onClick = {this.handleFormSubmit}>
           Next

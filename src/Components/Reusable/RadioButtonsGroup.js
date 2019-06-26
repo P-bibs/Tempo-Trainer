@@ -3,13 +3,11 @@ import {Radio, RadioGroup, FormControl, FormControlLabel, FormLabel} from '@mate
 
 
 export default class RadioButtonsGroup extends React.Component {
-  constructor(props){
-    super(props);
-    this.options = this.props.options.map(option => {
-      return <FormControlLabel style = {this.props.buttonStyle} key = {option} value={option} control = {<Radio />} label = {option} />
-    });
-  }
   render() {
+    let _options = this.props.options.map(option => {
+      return <FormControlLabel style = {this.props.error ? {color: "red"} : {}} key = {option} value={option} control = {<Radio/>} label = {option} />
+    });
+
     return (
       <div className={""}>
       <FormControl component="fieldset" className={""}>
@@ -24,9 +22,10 @@ export default class RadioButtonsGroup extends React.Component {
           value={this.props.value}
           onChange={this.props.handleChange}
         >
-        {this.options}
+        {_options}
         </RadioGroup>
       </FormControl>
+      {this.props.error ? <p style={{color: "red", fontSize: "16px"}}>{this.props.errorText}</p> : <p></p>}
       </div>
     );
   }

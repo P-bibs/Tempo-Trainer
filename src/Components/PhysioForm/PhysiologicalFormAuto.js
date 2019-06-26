@@ -1,8 +1,9 @@
-import React from 'react';  
-import {TextField, InputAdornment, Button, RadioButtonsGroup, Switch, FormControlLabel} from '@material-ui/core'
+import React from 'react';
+import {TextField, InputAdornment, Button, Switch, FormControlLabel} from '@material-ui/core'
 import './FormStyles.css'
+import RadioButtonsGroup from '../Reusable/RadioButtonsGroup'
 
-export default class PhysiologicalFormAuto extends React.Component {  
+export default class PhysiologicalFormAuto extends React.Component {
   constructor(props) {
     super(props);
 
@@ -10,9 +11,10 @@ export default class PhysiologicalFormAuto extends React.Component {
       feet: '',
       inches: '',
       meters: '',
+      errors: {feet: false, inches: false, meters: false, gender: false},
       useMetric: false,
       gender: '',
-      
+
       genderOptions: ['Male', 'Female'],
     }
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -26,29 +28,94 @@ export default class PhysiologicalFormAuto extends React.Component {
 
     this.setState({
       [name]: value
+    }, () => {if (target.type !== 'checkbox') {this.validate(false)}});
+  }
+
+  validate(pushNewErrors){
+    let _errors = this.state.errors
+
+    if (this.state.useMetric){
+      if (this.state.meters === ""){
+        if (pushNewErrors) {
+          _errors.meters = true
+        }
+      }
+      else{
+        _errors.meters = false
+      }
+    }
+    else {
+      _errors.meters = false
+    }
+    if (this.state.useMetric === false) {
+      if (this.state.feet === ""){
+        if (pushNewErrors) {
+          _errors.feet = true
+        }
+      }
+      else{
+        _errors.feet = false
+      }
+      if (this.state.inches === ""){
+        if (pushNewErrors) {
+          _errors.inches = true
+        }
+      }
+      else{
+        _errors.inches = false
+      }
+    }
+    else {
+      _errors.feet = false
+      _errors.inches = false
+    }
+    if (this.state.gender === "") {
+      if (pushNewErrors) {
+        _errors.gender = true
+      }
+    }
+    else {
+        _errors.gender = false
+    }
+
+    this.setState({
+      errors: _errors
     });
+
+    let _hasError = false
+    Object.keys(_errors).forEach(function(key) {
+        if (_errors[key] === true) {
+          _hasError = true
+        }
+    });
+
+    return !_hasError
   }
 
   handleFormSubmit() {
-    let _height
-    if (this.state.useMetric){
-      _height = Number(this.state.meters) * .3048
+    if (this.validate(true)) {
+      let _height
+      if (this.state.useMetric){
+        _height = Number(this.state.meters) * .3048
+      }
+      else {
+        _height = Number(this.state.feet) + (Number(this.state.inches) / 12)
+      }
+      this.props.changePage({height: _height, gender: this.state.gender}, 1);
     }
-    else {
-      _height = Number(this.state.feet) + (Number(this.state.inches) / 12)
-    }
-    this.props.changePage({height: _height, gender: this.state.gender}, 1);
+
   }
 
   render() {
     return (
       <form className="container" onSubmit={this.handleFormSubmit}>
-        <div style={{display: "inline-flex", alignItems: "center", justifyContent: "space-evenly"}}>
-          <TextField 
+        <div style={{display: "inline-flex", alignItems: "center", justifyContent: "center"}}>
+          <TextField
             variant = {"filled"}
             style = {{
               margin: "10px",
-              width: "15%"
+              flexBasis: "100px",
+              display: this.state.useMetric ? "none" : ""
             }}
             type = {'number'}
             title = {'Height'}
@@ -63,13 +130,14 @@ export default class PhysiologicalFormAuto extends React.Component {
               shrink: true
             }}
             disabled = {this.state.useMetric}
+            error = {this.state.errors.feet}
           />
-          <TextField 
+          <TextField
             variant = {"filled"}
             style = {{
               margin: "10px",
-              width: "15%",
-              float: "right"
+              flexBasis: "100px",
+              display: this.state.useMetric ? "none" : ""
             }}
             type = {'number'}
             title = {'Height'}
@@ -81,27 +149,14 @@ export default class PhysiologicalFormAuto extends React.Component {
               endAdornment: <InputAdornment position="end">{"in"}</InputAdornment>,
             }}
             disabled = {this.state.useMetric}
+            error = {this.state.errors.inches}
           />
-          <FormControlLabel
-            style = {{
-              textAlign: "center"
-            }}
-            control = {
-              <Switch
-                checked={this.state.useMetric}
-                onChange={this.handleInputChange}
-                name="useMetric"
-                inputProps={{ 'aria-label': 'secondary checkbox' }}
-              />
-            }
-            label="Use Metric"
-            
-          />
-          <TextField 
+          <TextField
             variant = {"filled"}
             style = {{
               margin: "10px",
-              width: "30%"
+              flexBasis: "220px",
+              display: this.state.useMetric ? "" : "none"
             }}
             type = {'number'}
             title = {'Height'}
@@ -116,7 +171,23 @@ export default class PhysiologicalFormAuto extends React.Component {
               shrink: true
             }}
             disabled = {!this.state.useMetric}
+            error = {this.state.errors.meters}
           />
+          <FormControlLabel
+            style = {{
+              margin: "10px",
+              textAlign: "center",
+            }}
+            control = {
+              <Switch
+                checked={this.state.useMetric}
+                onChange={this.handleInputChange}
+                name="useMetric"
+              />
+            }
+            label="Use Metric"
+          />
+
         </div>
         <RadioButtonsGroup
           title = {'Gender'}
@@ -125,8 +196,10 @@ export default class PhysiologicalFormAuto extends React.Component {
           value = {this.state.gender}
           placeholder = {'Select Gender'}
           handleChange = {this.handleInputChange}
+          error = {this.state.errors.gender}
+          errorText = {"Please select a gender"}
         />
-        <Button 
+        <Button
           variant = {'contained'}
           onClick = {this.handleFormSubmit}>
           Next
