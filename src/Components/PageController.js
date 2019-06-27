@@ -4,6 +4,7 @@ import RedirectPage from './Redirect/RedirectPage'
 import FormPage from './PhysioForm/PhysioFormPage'
 import SourceSelectPage from './SourceSelect/SourceSelectPage.js'
 import SettingsPage from './Settings/SettingsPage.js'
+import ResultPage from './Result/ResultPage';
 
 export default class PageController extends React.Component {
   constructor(props){
@@ -13,9 +14,7 @@ export default class PageController extends React.Component {
       //'globalState' defined later
     }
     
-    this.changePage_PhysioForm = this.changePage_PhysioForm.bind(this)
-    this.changePage_SourceSelect = this.changePage_SourceSelect.bind(this)
-    this.changePage_Settings = this.changePage_Settings.bind(this)
+    this.changePage = this.changePage.bind(this);
 
     this.pages = [
       <RedirectPage/>
@@ -30,59 +29,39 @@ export default class PageController extends React.Component {
       this.spotify.setAccessToken(token);
       this.state = {...this.state, currentPage: 1}
       this.pages[1] = <FormPage 
-        changePage={this.changePage_PhysioForm}
+        changePage={this.changePage}
         spotify = {this.spotify}
       />;
     }
-
-    
   }
 
-  changePage_PhysioForm(data, direction){
-    if (direction === 1){
-      this.pages[2] = <SourceSelectPage
-          globalState = {{...this.state.globalState, ...data}}
-          changePage={this.changePage_SourceSelect}
-          spotify = {this.spotify}
-        />
+  changePage(data, pageNumber) {
+    if (pageNumber >= this.state.currentPage) {
+      let _props = {
+        globalState: {...this.state.globalState, ...data},
+        changePage: this.changePage,
+        spotify: this.spotify
+      }
 
-      this.setState(previousState => {
-        return {
-          currentPage: 2,
-          globalState: {...previousState.globalState, ...data}
-        }
-      })
-    }
-  }
+      let _pages = [
+        <RedirectPage {..._props}/>,
+        <FormPage {..._props}/>,
+        <SourceSelectPage {..._props}/>,
+        <SettingsPage {..._props}/>,
+        <ResultPage {..._props}/>,
+      ]
 
-  changePage_SourceSelect(data, direction){
-    if (direction === 1){
-      this.pages[3] = <SettingsPage
-        globalState = {{...this.state.globalState, ...data}}
-        changePage={this.changePage_Settings}
-        spotify = {this.spotify}
-      />
-      this.setState(previousState => {
-        return {
-          currentPage: 3,
-          globalState: {...previousState.globalState, ...data}
-        }
-      })
+      this.pages[pageNumber] = _pages[pageNumber]
     }
-    else if (direction === -1) {
-      this.setState({
-        currentPage: 1
-      })
-    }
-  }
 
-  changePage_Settings(data, direction){
-    if (direction === -1) {
-      this.setState({
-        currentPage: 2
-      })
-    }
+    this.setState(previousState => {
+      return {
+        currentPage: pageNumber,
+        globalState: {...previousState.globalState, ...data}
+      }
+    })
   }
+  
 
   parseAccessToken(){
     var url = window.location.href;

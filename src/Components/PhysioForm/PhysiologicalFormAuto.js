@@ -101,7 +101,7 @@ export default class PhysiologicalFormAuto extends React.Component {
       else {
         _height = Number(this.state.feet) + (Number(this.state.inches) / 12)
       }
-      this.props.changePage({height: _height, gender: this.state.gender}, 1);
+      this.props.changePage({height: _height, gender: this.state.gender}, 2);
     }
 
   }

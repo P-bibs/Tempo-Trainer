@@ -11,6 +11,7 @@ export default class SettingsPage extends React.Component {
       playlistTitle: "",
       compatibleTracks: 0,
       tolerance: 10,
+      loading: false,
 
       responseRecieved: false
     }
@@ -62,8 +63,6 @@ export default class SettingsPage extends React.Component {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    
-
     this.setState({
       [name]: value,
     }, function(){
@@ -82,7 +81,12 @@ export default class SettingsPage extends React.Component {
   }
 
   handleFormSubmit() {
-    //this.props.changePage(this.state);
+    let _resultURL
+
+    this.setState({
+      loading: true
+    })
+
     this.spotify.getMe()
       .then(function(data){
         let _userId = data.id
@@ -90,11 +94,12 @@ export default class SettingsPage extends React.Component {
       }.bind(this))
       .then(function(data){
         let _tracks = this.state.compatibleTracks.map(item => {return "spotify:track:" + item[0]})
+        _resultURL = data.external_urls.spotify
         return this.spotify.addTracksToPlaylist(data.id, _tracks)
       }.bind(this))
       .then(function(data){
-        console.log(data)
-      })
+        this.props.changePage({resultURL: _resultURL}, 4)
+      }.bind(this))
   }
 
   render() {
@@ -133,14 +138,18 @@ export default class SettingsPage extends React.Component {
           </div>
           <Button 
             variant = {'contained'}
-            onClick = {() => this.props.changePage({}, -1)}>
+            onClick = {() => this.props.changePage({}, 2)}>
             Back
           </Button>
-          <Button 
-            variant = {'contained'}
-            onClick = {this.handleFormSubmit}>
-            Done
-          </Button>
+          {this.state.loading ? 
+            <CircularProgress/>
+            :
+            <Button 
+              variant = {'contained'}
+              onClick = {this.handleFormSubmit}>
+              Done
+            </Button>
+          }
         </div>
       )
     }

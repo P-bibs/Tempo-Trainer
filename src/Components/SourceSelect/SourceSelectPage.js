@@ -83,7 +83,7 @@ export default class SourceSelectPage extends React.Component {
     if (this.validate(true)) {
       this.props.changePage(
         {sourceURIs: [this.playlistIds[this.state.source]]},
-        1
+        3
       );
     }
   }
@@ -107,7 +107,7 @@ export default class SourceSelectPage extends React.Component {
 
         <Button
           variant = {'contained'}
-          onClick = {() => {this.props.changePage({}, -1)}}>
+          onClick = {() => {this.props.changePage({}, 1)}}>
           Back
         </Button>
         <Button
