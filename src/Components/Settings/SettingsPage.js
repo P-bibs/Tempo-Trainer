@@ -136,19 +136,23 @@ export default class SettingsPage extends React.Component {
           <div>
             {this.state.compatibleTracks.length}/{this.state.possibleTracks.length}
           </div>
-          <Button 
-            variant = {'contained'}
-            onClick = {() => this.props.changePage({}, 2)}>
-            Back
-          </Button>
           {this.state.loading ? 
-            <CircularProgress/>
+            <div>
+              <CircularProgress/>
+            </div>
             :
-            <Button 
-              variant = {'contained'}
-              onClick = {this.handleFormSubmit}>
-              Done
-            </Button>
+            <div>
+              <Button
+                variant = {'contained'}
+                onClick = {() => this.props.changePage({}, 2)}>
+                Back
+              </Button>
+              <Button
+                variant = {'contained'}
+                onClick = {this.handleFormSubmit}>
+                Done
+              </Button>
+            </div>
           }
         </div>
       )

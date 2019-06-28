@@ -16,7 +16,6 @@ export default class RedirectButton extends React.Component {
         redirect_uri: window.location.href.split('#')[0],
         scope: "playlist-modify-private playlist-modify-public"
     };
-    alert(window.location.href.split('#')[0])
     
     var esc = encodeURIComponent;
     var query = Object.keys(params)
