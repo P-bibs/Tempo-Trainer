@@ -10,7 +10,7 @@ export default class ResultPage extends React.Component {
         </h1>
         <h2>
           <a href={this.props.globalState.resultURL} target="_blank" rel="noopener noreferrer">
-            {this.props.globalState.resultURL}
+            See it here
           </a>
         </h2>
         <h3>Wanna do it again?</h3>
