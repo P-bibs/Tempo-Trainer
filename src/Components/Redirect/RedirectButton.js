@@ -13,9 +13,10 @@ export default class RedirectButton extends React.Component {
     var params = {
         client_id: '78b3189f1c0b49caa2fbb1482f477223',
         response_type: 'token',
-        redirect_uri: window.location.href = window.location.href.split('#')[0],
+        redirect_uri: window.location.href.split('#')[0],
         scope: "playlist-modify-private playlist-modify-public"
     };
+    alert(window.location.href.split('#')[0])
     
     var esc = encodeURIComponent;
     var query = Object.keys(params)
