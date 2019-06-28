@@ -2,6 +2,7 @@
   "name": "bpm_trainer",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@material-ui/core": "^4.0.0-rc.0",
     "react": "^16.8.6",
