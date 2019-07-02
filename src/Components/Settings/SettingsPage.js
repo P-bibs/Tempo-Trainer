@@ -109,7 +109,7 @@ export default class SettingsPage extends React.Component {
     }
     else{
       return (
-        <div>
+        <div style={{height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
           <TextField 
             variant = {"filled"}
             style = {{
@@ -143,12 +143,14 @@ export default class SettingsPage extends React.Component {
             :
             <div>
               <Button
-                variant = {'contained'}
+                variant = {'outlined'}
+                color = {'primary'}
                 onClick = {() => this.props.changePage({}, 2)}>
                 Back
               </Button>
               <Button
                 variant = {'contained'}
+                color = {'primary'}
                 onClick = {this.handleFormSubmit}>
                 Done
               </Button>

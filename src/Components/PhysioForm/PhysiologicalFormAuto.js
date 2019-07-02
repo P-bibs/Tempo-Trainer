@@ -201,6 +201,7 @@ export default class PhysiologicalFormAuto extends React.Component {
         />
         <Button
           variant = {'contained'}
+          color = {'primary'}
           onClick = {this.handleFormSubmit}>
           Next
         </Button>

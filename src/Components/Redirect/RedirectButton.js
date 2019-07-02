@@ -29,8 +29,10 @@ export default class RedirectButton extends React.Component {
   render() {
     return <Button 
       variant={'contained'}
-      onClick={this.redirectToAuth}>
-      Click Here to Authenticate
+      color={'primary'}
+      onClick={this.redirectToAuth}
+      size={'large'}>
+      {this.props.text}
     </Button>
   }
 }

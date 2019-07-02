@@ -90,7 +90,7 @@ export default class SourceSelectPage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
         {this.state.loading ?
           <div><CircularProgress/></div>
           :
@@ -105,16 +105,20 @@ export default class SourceSelectPage extends React.Component {
           />
         }
 
-        <Button
-          variant = {'contained'}
-          onClick = {() => {this.props.changePage({}, 1)}}>
-          Back
-        </Button>
-        <Button
-          variant = {'contained'}
-          onClick = {this.handleFormSubmit}>
-          Next
-        </Button>
+        <span>
+          <Button
+            variant = {'outlined'}
+            color = {'primary'}
+            onClick = {() => {this.props.changePage({}, 1)}}>
+            Back
+          </Button>
+          <Button
+            variant = {'contained'}
+            color = {'primary'}
+            onClick = {this.handleFormSubmit}>
+            Next
+          </Button>
+        </span>
       </div>
     )
   }
