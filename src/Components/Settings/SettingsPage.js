@@ -19,6 +19,7 @@ export default class SettingsPage extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.sourcesToTracks = this.sourcesToTracks.bind(this);
 
     this.strideLength = Number(this.props.globalState.height) * (this.props.globalState.gender === "male" ? 1.17 : 1.14)
     console.log(this.strideLength)
@@ -29,18 +30,25 @@ export default class SettingsPage extends React.Component {
   }
 
   componentDidMount(){
-    console.log(this.props.globalState.sourceURIs)
-    this.spotify.getPlaylist(this.props.globalState.sourceURIs[0])
-      .then(function(data){
-        let tracks = data.tracks.items.map(item => {
-          return item.track.id
-        })
-        return this.spotify.getAudioFeaturesForTracks(tracks)
+    //Turn input source objects into a track id list and then retrieve all audio features
+    this.sourcesToTracks()
+      .then(function(data) {
+        //Split audio feature requests into sets of 100 and then run
+        let batchPromises = []
+        for (let i = 0; i < data.length; i+=100) {
+          let listSlice = data.slice(i, Math.min(i+100, data.length))
+          batchPromises.push(this.spotify.getAudioFeaturesForTracks(listSlice))
+        }
+        return Promise.all(batchPromises)
       }.bind(this))
-      .then(function(data){
-        console.log(data)
+      .then(function(dataList){
+        //Create a list of track ids and their tempos
+        let data = []
+        dataList.forEach(batch => {
+          data.push(...batch.audio_features)
+        })
 
-        let _possibleTracks = data.audio_features.map(item => {
+        let _possibleTracks = data.map(item => {
           if(item){
             return [item.id, item.tempo]
           }
@@ -56,6 +64,50 @@ export default class SettingsPage extends React.Component {
         
 
       }.bind(this));
+  }
+
+  //Take a list of many types of sources (liked songs, top songs, playlists) and
+  //return a list of track ids
+  async sourcesToTracks() {
+    let _tracks = [];
+
+    for (let i in this.props.globalState.trackSources) {
+      let source = this.props.globalState.trackSources[i];
+
+      if (source.isPlaylist) {
+        let _data = await this.spotify.getPlaylistTracks(source.id)
+        _data.items.forEach((item) => {
+          _tracks.push(item.track.id)
+        });
+      }
+
+      else if (source.type === "liked") {
+        //Get first 50 saved tracks
+        let _data = await this.spotify.getMySavedTracks({limit: 50})
+
+        _data.items.forEach((item) => {
+          _tracks.push(item.track.id)
+        });
+
+        //Once you know how many tracks the user has saved, fetch them in sets of 50
+        let savedTracksLen = _data.total;
+        for (let i = 50; i < savedTracksLen; i+=50) {
+          let _data = await this.spotify.getMySavedTracks({limit: 50, offset:i})
+          _data.items.forEach((item) => {
+            _tracks.push(item.track.id)
+          });
+        }
+      }
+      //TODO: make sure this works when API is patched
+      else if (source.type === "top") {
+        let _data = await this.spotify.getMyTopTracks({time_range: source.timeSpan})
+        _data.items.forEach((track) => {
+          _tracks.push(track.id)
+        });
+      }
+    }
+
+    return _tracks
   }
 
   handleInputChange(event) {

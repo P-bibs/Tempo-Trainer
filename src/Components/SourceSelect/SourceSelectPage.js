@@ -1,62 +1,109 @@
 import React from 'react';
 import {Button, CircularProgress} from '@material-ui/core'
-import RadioButtonsGroup from '../Reusable/RadioButtonsGroup'
+import SourceSelectCheckboxList from './SourceSelectCheckboxList';
 
 
 export default class SourceSelectPage extends React.Component {
   constructor(props){
     super(props)
+
+    let _sourceOptions = {
+      "Liked Songs": {
+        title: "Liked Songs",
+        isPlaylist: false,
+        type: "liked",
+        checked: false
+      },
+      "Top 50 Tracks - 1 Month": {
+        title: "Top 50 Tracks - 1 Month",
+        isPlaylist: false,
+        type: "top",
+        timeSpan: "short_term",
+        checked: false,
+        disabled: true
+      },
+      "Top 50 Tracks - 6 Months": {
+        title: "Top 50 Tracks - 6 Months",
+        isPlaylist: false,
+        type: "top",
+        timeSpan: "medium_term",
+        checked: false,
+        disabled: true
+      },
+      "Top 50 Tracks - All Time": {
+        title: "Top 50 Tracks - All Time",
+        isPlaylist: false,
+        type: "top",
+        timeSpan: "long_term",
+        checked: false,
+        disabled: true
+      }
+    }
+
     this.state = {
-      source: "",
-      sourceOptions: [],
+      sourceOptions: _sourceOptions,
       errors: {source: false},
       loading: true
     }
     this.spotify = props.spotify
 
-    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   componentDidMount(){
+    //Fetch user playlists and format them into objects
     this.spotify.getUserPlaylists()
       .then(function(data) {
-        //Construct Table to translate playlist names into Spotify URIs
-        this.playlistIds = {}
-        data.items.forEach(item => {this.playlistIds[item.name] = item.id})
-
-        let names = []
-        data.items.forEach(element => {
-          names.push(element.name)
-        });
-
-        this.setState({
-          sourceOptions: names,
-          loading: false
+        let _playlists = {}
+        data.items.forEach(playlist => {
+          _playlists[playlist.name] = {
+            title: playlist.name,
+            isPlaylist: true,
+            id: playlist.id,
+            checked: false
+          }
+        })
+        // Add playlists to options and disable loading indicator
+        this.setState(previousState => {
+          return {
+            sourceOptions: {...previousState.sourceOptions, ..._playlists},
+            loading: false
+          }
         })
       }.bind(this))
+      // If the token is expired, redirect to homepage
       .catch(function(err) {
         window.location.href = window.location.href.split('#')[0]
       });
   }
 
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
+  handleCheckboxChange = name => event => {
+    const value = event.target.checked;
 
     this.setState(previousState => {
       return {
-        [name]: value,
+        sourceOptions: {...previousState.sourceOptions, [name]: {...previousState.sourceOptions[name], checked: value}}
       }
-    }, () => this.validate(false));
+    }, () => {
+      this.validate(false);
+    });
 
   }
 
+  //Check to see if all fields are filled out properly and display error messages if not
+  //Accepts a boolean. If true, will add and remove errors. If false, will only remove errors.
   validate(pushNewErrors){
     let _errors = this.state.errors
 
-    if (this.state.source === "") {
+    let hasOneCheck = false;
+    Object.keys(this.state.sourceOptions).forEach((key) => {
+      if (this.state.sourceOptions[key].checked) {
+        hasOneCheck = true
+      }
+    });
+
+    if (!hasOneCheck) {
       if (pushNewErrors) {
         _errors.source = true
       }
@@ -81,8 +128,14 @@ export default class SourceSelectPage extends React.Component {
 
   handleFormSubmit() {
     if (this.validate(true)) {
+      let _trackSources = []
+      Object.keys(this.state.sourceOptions).forEach((key) => {
+        if (this.state.sourceOptions[key].checked)
+          _trackSources.push(this.state.sourceOptions[key])
+      });
+
       this.props.changePage(
-        {sourceURIs: [this.playlistIds[this.state.source]]},
+        {trackSources: _trackSources},
         3
       );
     }
@@ -90,16 +143,14 @@ export default class SourceSelectPage extends React.Component {
 
   render() {
     return (
-      <div style={{height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
+      <div style={{height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
         {this.state.loading ?
-          <div><CircularProgress/></div>
+          <div style={{height: "100%"}}><CircularProgress/></div>
           :
-          <RadioButtonsGroup
+          <SourceSelectCheckboxList
             title = {'Source Select'}
-            name = {'source'}
-            options = {["Saved Songs", ...this.state.sourceOptions]}
-            value = {this.state.source}
-            handleChange = {this.handleInputChange}
+            options = {this.state.sourceOptions}
+            handleChange = {this.handleCheckboxChange}
             error = {this.state.errors.source}
             errorText = {"Please select a source playlist"}
           />
