@@ -16,14 +16,14 @@ export default class SourceSelectCheckboxList extends React.Component {
     })
 
     return (
-      <div>
-        <FormControl component = "fieldset">
+      <div style={{padding: "10px", margin: "10px", border: "1px solid black"}}>
+        <FormControl component = "fieldset" style={{height: "100%", overflow: "auto", flexWrap: "nowrap"}}>
           <FormLabel component = "legend">{this.props.title}</FormLabel>
           <FormGroup>
             {_options}
           </FormGroup>
         </FormControl>
-        {this.props.error ? <p style={{color: "red", fontSize: "16px"}}>{this.props.errorText}</p> : <p></p>}
+        {this.props.error ? <p style={{color: "red", fontSize: "16px"}}>{this.props.errorText}</p> : <div/>}
       </div>
     )
   }

@@ -7,7 +7,7 @@ export default class SourceSelectPage extends React.Component {
   constructor(props){
     super(props)
 
-    let _sourceOptions = {
+    let _specialSources = {
       "Liked Songs": {
         title: "Liked Songs",
         isPlaylist: false,
@@ -41,7 +41,7 @@ export default class SourceSelectPage extends React.Component {
     }
 
     this.state = {
-      sourceOptions: _sourceOptions,
+      specialSources: _specialSources,
       errors: {source: false},
       loading: true
     }
@@ -49,41 +49,71 @@ export default class SourceSelectPage extends React.Component {
 
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.getUserPlaylists = this.getUserPlaylists.bind(this);
   }
 
   componentDidMount(){
     //Fetch user playlists and format them into objects
-    this.spotify.getUserPlaylists()
-      .then(function(data) {
-        let _playlists = {}
-        data.items.forEach(playlist => {
-          _playlists[playlist.name] = {
-            title: playlist.name,
-            isPlaylist: true,
-            id: playlist.id,
-            checked: false
-          }
-        })
-        // Add playlists to options and disable loading indicator
-        this.setState(previousState => {
-          return {
-            sourceOptions: {...previousState.sourceOptions, ..._playlists},
-            loading: false
-          }
-        })
-      }.bind(this))
-      // If the token is expired, redirect to homepage
-      .catch(function(err) {
-        window.location.href = window.location.href.split('#')[0]
-      });
+    this.getUserPlaylists()
   }
 
-  handleCheckboxChange = name => event => {
+  async getUserPlaylists() {
+    let me = await this.spotify.getMe()
+    let userID = me.id
+
+
+    let _publicPlaylists = {}
+    let _privatePlaylists = {}
+    let _followedPlaylists = {}
+
+    //Get first 50 saved tracks
+    let data
+    try {
+      data = await this.spotify.getUserPlaylists({limit: 50})
+    } catch (err) {
+      // If the token is expired, redirect to homepage
+      window.location.href = window.location.href.split('#')[0]
+    }
+
+    //Once you know how many tracks the user has saved, fetch them in sets of 50
+    let totalPlaylists = data.total;
+    for (let i = 50; i < totalPlaylists+50; i+=50) {
+      data.items.forEach((playlist) => {
+        let playlistDict = {
+          title: playlist.name,
+          isPlaylist: true,
+          id: playlist.id,
+          checked: false
+        }
+        if (playlist.owner.id === userID) {
+          if (playlist.public) {
+            _publicPlaylists[playlist.name] = (playlistDict)
+          }
+          else {
+            _privatePlaylists[playlist.name] = (playlistDict)
+          }
+        }
+        else {
+          _followedPlaylists[playlist.name] = (playlistDict)
+        }
+      });
+      data = await this.spotify.getUserPlaylists({limit: 50, offset:i})
+    }
+
+    this.setState({
+      publicPlaylists: _publicPlaylists,
+      privatePlaylists: _privatePlaylists,
+      followedPlaylists: _followedPlaylists,
+      loading: false
+    })
+  }
+
+  handleCheckboxChange = stateName => playlistName => event => {
     const value = event.target.checked;
 
     this.setState(previousState => {
       return {
-        sourceOptions: {...previousState.sourceOptions, [name]: {...previousState.sourceOptions[name], checked: value}}
+        [stateName]: {...previousState[stateName], [playlistName]: {...previousState[stateName][playlistName], checked: value}}
       }
     }, () => {
       this.validate(false);
@@ -96,13 +126,21 @@ export default class SourceSelectPage extends React.Component {
   validate(pushNewErrors){
     let _errors = this.state.errors
 
+    //Loop through each set of sources and see if at least one source is selected
     let hasOneCheck = false;
-    Object.keys(this.state.sourceOptions).forEach((key) => {
-      if (this.state.sourceOptions[key].checked) {
-        hasOneCheck = true
-      }
-    });
+    let sourceTypes = ["specialSources", "publicPlaylists", "privatePlaylists", "followedPlaylists"]
+    for (let i = 0; i < sourceTypes.length; i++) {
+      let sourceType = sourceTypes[i]
+      Object.keys(this.state[sourceType]).forEach((key) => {  // eslint-disable-line
+        if (this.state[sourceType][key].checked) {
+          hasOneCheck = true;
+        }
+      });
+      if (hasOneCheck) break;
+    }
 
+    //Add or remove errors depending on whether or not above code
+    //found at least one checked box
     if (!hasOneCheck) {
       if (pushNewErrors) {
         _errors.source = true
@@ -128,11 +166,17 @@ export default class SourceSelectPage extends React.Component {
 
   handleFormSubmit() {
     if (this.validate(true)) {
+      //Loop through each set of playlists and grab ids for any boxes that are checked
       let _trackSources = []
-      Object.keys(this.state.sourceOptions).forEach((key) => {
-        if (this.state.sourceOptions[key].checked)
-          _trackSources.push(this.state.sourceOptions[key])
-      });
+      let sourceTypes = ["specialSources", "publicPlaylists", "privatePlaylists", "followedPlaylists"]
+      for (let i = 0; i < sourceTypes.length; i++) {
+        let sourceType = sourceTypes[i]
+        Object.keys(this.state[sourceType]).forEach((key) => {
+          if (this.state[sourceType][key].checked)
+            _trackSources.push(this.state[sourceType][key])
+        });
+      }
+      
 
       this.props.changePage(
         {trackSources: _trackSources},
@@ -143,17 +187,52 @@ export default class SourceSelectPage extends React.Component {
 
   render() {
     return (
-      <div style={{height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
+      <div style={{height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
         {this.state.loading ?
-          <div style={{height: "100%"}}><CircularProgress/></div>
+          <div style={{height: "auto"}}><CircularProgress/></div>
           :
-          <SourceSelectCheckboxList
-            title = {'Source Select'}
-            options = {this.state.sourceOptions}
-            handleChange = {this.handleCheckboxChange}
-            error = {this.state.errors.source}
-            errorText = {"Please select a source playlist"}
-          />
+          <div style={{height: "70%", display: "flex", flexDirection: "row"}}>
+            <SourceSelectCheckboxList
+              title = {'Special Sources'}
+              options = {this.state.specialSources}
+              handleChange = {this.handleCheckboxChange('specialSources')}
+              error = {this.state.errors.source}
+              errorText = {"Please select a source playlist"}
+            />
+            {Object.keys(this.state.publicPlaylists).length !== 0 ?
+              <SourceSelectCheckboxList
+                title = {'Public'}
+                options = {this.state.publicPlaylists}
+                handleChange = {this.handleCheckboxChange('publicPlaylists')}
+                error = {this.state.errors.source}
+                errorText = {"Please select a source playlist"}
+              />
+              :
+              <div/>
+            }
+            {Object.keys(this.state.privatePlaylists).length !== 0 ?
+              <SourceSelectCheckboxList
+                title = {'Private'}
+                options = {this.state.privatePlaylists}
+                handleChange = {this.handleCheckboxChange('privatePlaylists')}
+                error = {this.state.errors.source}
+                errorText = {"Please select a source playlist"}
+              />
+              :
+              <div/>
+            }
+            {Object.keys(this.state.followedPlaylists).length !== 0 ?
+              <SourceSelectCheckboxList
+                title = {'Followed'}
+                options = {this.state.followedPlaylists}
+                handleChange = {this.handleCheckboxChange('followedPlaylists')}
+                error = {this.state.errors.source}
+                errorText = {"Please select a source playlist"}
+              />
+              :
+              <div/>
+            }
+          </div>
         }
 
         <span>
