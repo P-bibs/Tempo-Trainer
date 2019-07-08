@@ -1,5 +1,6 @@
 import React from 'react'
 import RedirectButton from './RedirectButton'
+import logo from './logo.png'
 
 export default class RedirectPage extends React.Component {
   render() {
@@ -17,6 +18,7 @@ export default class RedirectPage extends React.Component {
           <li>Enter a target pace</li>
         </ul>
         <h3>You'll have a personalized playlist plopped into your library! Run to the beat of the music to stay on pace.</h3>
+        <img src={logo}/>
         <RedirectButton text="Click to get started" />
       </div>
     )
