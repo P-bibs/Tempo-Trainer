@@ -2,7 +2,7 @@
 
 Generate Spotify playlists that help you hit your target pace
 
-[See the live site](paulbiberstein.me/tempotrainer)
+[See the live site](https://paulbiberstein.me/tempotrainer)
 
 ## What it Does
 
@@ -14,4 +14,4 @@ Start by inputting your gender and height, this helps us get a rough idea of how
 
 ## Wanna try it out?
 
-Go see it in action [here](paulbiberstein.me/tempotrainer)
+Go see it in action [here](https://paulbiberstein.me/tempotrainer)
