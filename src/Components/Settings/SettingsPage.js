@@ -61,7 +61,7 @@ export default class SettingsPage extends React.Component {
           responseRecieved: true,
           possibleTracks: _possibleTracks
         })
-        
+
 
       }.bind(this));
   }
@@ -129,7 +129,7 @@ export default class SettingsPage extends React.Component {
       });
     });
 
-    
+
   }
 
   handleFormSubmit() {
@@ -155,14 +155,15 @@ export default class SettingsPage extends React.Component {
   }
 
   render() {
-    
+
     if (this.state.responseRecieved === false) {
       return <CircularProgress />
     }
     else{
       return (
         <div style={{height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
-          <TextField 
+          <h1>Settings</h1>
+          <TextField
             variant = {"filled"}
             style = {{
               margin: "10px",
@@ -174,6 +175,7 @@ export default class SettingsPage extends React.Component {
             onChange = {this.handleInputChange}
           />
           <div>
+            <h2>Target Pace:</h2>
             <PaceInput
               name0 = {"paceMinutes"}
               value0 = {this.state.paceMinutes}
@@ -183,12 +185,12 @@ export default class SettingsPage extends React.Component {
             />
           </div>
           <div>
-            Number of songs that match tempo:
+            Number of songs that match pace:
           </div>
           <div>
             {this.state.compatibleTracks.length}/{this.state.possibleTracks.length}
           </div>
-          {this.state.loading ? 
+          {this.state.loading ?
             <div>
               <CircularProgress/>
             </div>

@@ -176,7 +176,7 @@ export default class SourceSelectPage extends React.Component {
             _trackSources.push(this.state[sourceType][key])
         });
       }
-      
+
 
       this.props.changePage(
         {trackSources: _trackSources},
@@ -188,6 +188,8 @@ export default class SourceSelectPage extends React.Component {
   render() {
     return (
       <div style={{height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
+        <h1>Source Select</h1>
+        <h2>Pick which existing playlists you'd like to pull songs from to make your new playlist</h2>
         {this.state.loading ?
           <div style={{height: "auto"}}><CircularProgress/></div>
           :
