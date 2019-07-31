@@ -175,7 +175,7 @@ export default class SettingsPage extends React.Component {
             onChange = {this.handleInputChange}
           />
           <div>
-            <h2>Target Pace:</h2>
+            <p style={{marginBottom: "10px"}}>Target Pace:</p>
             <PaceInput
               name0 = {"paceMinutes"}
               value0 = {this.state.paceMinutes}

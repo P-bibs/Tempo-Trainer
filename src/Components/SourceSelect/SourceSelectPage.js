@@ -188,8 +188,8 @@ export default class SourceSelectPage extends React.Component {
   render() {
     return (
       <div style={{height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
-        <h1>Source Select</h1>
-        <h2>Pick which existing playlists you'd like to pull songs from to make your new playlist</h2>
+        <h1 style={{margin: "25px"}}>Source Select</h1>
+        <p style={{margin: "25px"}}>Pick which existing playlists you'd like to pull songs from to make your new playlist</p>
         {this.state.loading ?
           <div style={{height: "auto"}}><CircularProgress/></div>
           :
