@@ -184,10 +184,10 @@ export default class SettingsPage extends React.Component {
               handleChange = {this.handleInputChange}
             />
           </div>
-          <div>
+          <div style={{marginTop: "25px"}}>
             Number of songs that match pace:
           </div>
-          <div>
+          <div style={{marginBottom: "25px"}}>
             {this.state.compatibleTracks.length}/{this.state.possibleTracks.length}
           </div>
           {this.state.loading ?

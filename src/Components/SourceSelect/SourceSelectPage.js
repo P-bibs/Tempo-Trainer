@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button, CircularProgress} from '@material-ui/core'
+import {isMobileOnly} from 'react-device-detect'
 import SourceSelectCheckboxList from './SourceSelectCheckboxList';
 
 
@@ -186,72 +187,144 @@ export default class SourceSelectPage extends React.Component {
   }
 
   render() {
-    return (
-      <div style={{height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
-        <h1 style={{margin: "25px"}}>Source Select</h1>
-        <p style={{margin: "25px"}}>Pick which existing playlists you'd like to pull songs from to make your new playlist</p>
-        {this.state.loading ?
-          <div style={{height: "auto"}}><CircularProgress/></div>
-          :
-          <div style={{height: "70%", display: "flex", flexDirection: "row"}}>
-            <SourceSelectCheckboxList
-              title = {'Special Sources'}
-              options = {this.state.specialSources}
-              handleChange = {this.handleCheckboxChange('specialSources')}
-              error = {this.state.errors.source}
-              errorText = {"Please select a source playlist"}
-            />
-            {Object.keys(this.state.publicPlaylists).length !== 0 ?
+    if (!isMobileOnly) {
+      return (
+        <div style={{height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
+          <h1 style={{margin: "25px"}}>Source Select</h1>
+          <p style={{margin: "25px"}}>Pick which existing playlists you'd like to pull songs from to make your new playlist</p>
+          {this.state.loading ?
+            <div style={{height: "auto"}}><CircularProgress/></div>
+            :
+            <div style={{margin: "25px", height: "60vh", display: "flex", flexDirection: "row", flexWrap: "wrap"}}>
               <SourceSelectCheckboxList
-                title = {'Public'}
-                options = {this.state.publicPlaylists}
-                handleChange = {this.handleCheckboxChange('publicPlaylists')}
+                title = {'Special Sources'}
+                options = {this.state.specialSources}
+                handleChange = {this.handleCheckboxChange('specialSources')}
                 error = {this.state.errors.source}
                 errorText = {"Please select a source playlist"}
               />
-              :
-              <div/>
-            }
-            {Object.keys(this.state.privatePlaylists).length !== 0 ?
-              <SourceSelectCheckboxList
-                title = {'Private'}
-                options = {this.state.privatePlaylists}
-                handleChange = {this.handleCheckboxChange('privatePlaylists')}
-                error = {this.state.errors.source}
-                errorText = {"Please select a source playlist"}
-              />
-              :
-              <div/>
-            }
-            {Object.keys(this.state.followedPlaylists).length !== 0 ?
-              <SourceSelectCheckboxList
-                title = {'Followed'}
-                options = {this.state.followedPlaylists}
-                handleChange = {this.handleCheckboxChange('followedPlaylists')}
-                error = {this.state.errors.source}
-                errorText = {"Please select a source playlist"}
-              />
-              :
-              <div/>
-            }
-          </div>
-        }
+              {Object.keys(this.state.publicPlaylists).length !== 0 ?
+                <SourceSelectCheckboxList
+                  title = {'Public'}
+                  options = {this.state.publicPlaylists}
+                  handleChange = {this.handleCheckboxChange('publicPlaylists')}
+                  error = {this.state.errors.source}
+                  errorText = {"Please select a source playlist"}
+                />
+                :
+                <div/>
+              }
+              {Object.keys(this.state.privatePlaylists).length !== 0 ?
+                <SourceSelectCheckboxList
+                  title = {'Private'}
+                  options = {this.state.privatePlaylists}
+                  handleChange = {this.handleCheckboxChange('privatePlaylists')}
+                  error = {this.state.errors.source}
+                  errorText = {"Please select a source playlist"}
+                />
+                :
+                <div/>
+              }
+              {Object.keys(this.state.followedPlaylists).length !== 0 ?
+                <SourceSelectCheckboxList
+                  title = {'Followed'}
+                  options = {this.state.followedPlaylists}
+                  handleChange = {this.handleCheckboxChange('followedPlaylists')}
+                  error = {this.state.errors.source}
+                  errorText = {"Please select a source playlist"}
+                />
+                :
+                <div/>
+              }
+            </div>
+          }
 
-        <span>
-          <Button
-            variant = {'outlined'}
-            color = {'primary'}
-            onClick = {() => {this.props.changePage({}, 1)}}>
-            Back
-          </Button>
-          <Button
-            variant = {'contained'}
-            color = {'primary'}
-            onClick = {this.handleFormSubmit}>
-            Next
-          </Button>
-        </span>
-      </div>
-    )
+          <span style={{margin: "25px"}}>
+            <Button
+              variant = {'outlined'}
+              color = {'primary'}
+              onClick = {() => {this.props.changePage({}, 1)}}>
+              Back
+            </Button>
+            <Button
+              variant = {'contained'}
+              color = {'primary'}
+              onClick = {this.handleFormSubmit}>
+              Next
+            </Button>
+          </span>
+        </div>
+      )
+    }
+    else {
+      return (
+        <div style={{height: "auto", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
+          <h1 style={{margin: "25px"}}>Source Select</h1>
+          <p style={{margin: "25px"}}>Pick which existing playlists you'd like to pull songs from to make your new playlist</p>
+          <p>MOBILE DEVICE</p>
+          {this.state.loading ?
+            <div style={{height: "auto"}}><CircularProgress/></div>
+            :
+            <div style={{margin: "25px", height: "auto", display: "flex", flexDirection: "row", flexWrap: "wrap"}}>
+              <SourceSelectCheckboxList
+                title = {'Special Sources'}
+                options = {this.state.specialSources}
+                handleChange = {this.handleCheckboxChange('specialSources')}
+                error = {this.state.errors.source}
+                errorText = {"Please select a source playlist"}
+              />
+              {Object.keys(this.state.publicPlaylists).length !== 0 ?
+                <SourceSelectCheckboxList
+                  title = {'Public'}
+                  options = {this.state.publicPlaylists}
+                  handleChange = {this.handleCheckboxChange('publicPlaylists')}
+                  error = {this.state.errors.source}
+                  errorText = {"Please select a source playlist"}
+                />
+                :
+                <div/>
+              }
+              {Object.keys(this.state.privatePlaylists).length !== 0 ?
+                <SourceSelectCheckboxList
+                  title = {'Private'}
+                  options = {this.state.privatePlaylists}
+                  handleChange = {this.handleCheckboxChange('privatePlaylists')}
+                  error = {this.state.errors.source}
+                  errorText = {"Please select a source playlist"}
+                />
+                :
+                <div/>
+              }
+              {Object.keys(this.state.followedPlaylists).length !== 0 ?
+                <SourceSelectCheckboxList
+                  title = {'Followed'}
+                  options = {this.state.followedPlaylists}
+                  handleChange = {this.handleCheckboxChange('followedPlaylists')}
+                  error = {this.state.errors.source}
+                  errorText = {"Please select a source playlist"}
+                />
+                :
+                <div/>
+              }
+            </div>
+          }
+
+          <span style={{margin: "25px"}}>
+            <Button
+              variant = {'outlined'}
+              color = {'primary'}
+              onClick = {() => {this.props.changePage({}, 1)}}>
+              Back
+            </Button>
+            <Button
+              variant = {'contained'}
+              color = {'primary'}
+              onClick = {this.handleFormSubmit}>
+              Next
+            </Button>
+          </span>
+        </div>
+      )
+    }
   }
 }

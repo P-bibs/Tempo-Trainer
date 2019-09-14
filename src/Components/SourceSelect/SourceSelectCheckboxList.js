@@ -1,4 +1,5 @@
 import React from 'react'
+import {isMobileOnly} from 'react-device-detect'
 import { FormControlLabel, Checkbox, FormControl, FormLabel, FormGroup } from '@material-ui/core'
 
 export default class SourceSelectCheckboxList extends React.Component {
@@ -15,9 +16,11 @@ export default class SourceSelectCheckboxList extends React.Component {
       />
     })
 
+    let responsiveWidth = isMobileOnly ? "100%" : "auto";
+
     return (
-      <div style={{padding: "10px", margin: "10px", border: "1px solid black"}}>
-        <FormControl component = "fieldset" style={{height: "100%", overflow: "auto", flexWrap: "nowrap"}}>
+      <div style={{height: "100%", width: responsiveWidth, padding: "10px", margin: "10px", border: "1px solid black", overflowY: "auto"}}>
+        <FormControl component = "fieldset" style={{height: "100%", overflow: "auto", flexWrap: "no wrap"}}>
           <FormLabel component = "legend">{this.props.title}</FormLabel>
           <FormGroup>
             {_options}
